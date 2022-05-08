@@ -31,7 +31,7 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile import hook
-from os import path
+from os import path, system
 import subprocess
 
 @hook.subscribe.startup_once
@@ -89,8 +89,11 @@ keys = [Key(key[0], key[1], *key[2:]) for key in [
     # Browser
     ([mod], "n", lazy.spawn("google-chrome-stable")),
 
+    #Ranger
+    ([mod], "r", lazy.spawn("ranger --show")),
+
     # File Explorer
-    ([mod], "e", lazy.spawn(" thunar")),
+    ([mod], "e", lazy.spawn("thunar")),
 
     # Terminal
     ([mod], "Return", lazy.spawn("tilix")),
@@ -109,13 +112,13 @@ keys = [Key(key[0], key[1], *key[2:]) for key in [
     # ------------ Hardware Configs ------------
 
     # Volume
-    ([], "XF86AudioLowerVolume", lazy.spawn(
+    ([mod], "z", lazy.spawn(
         "pactl set-sink-volume @DEFAULT_SINK@ -5%"
     )),
-    ([], "XF86AudioRaiseVolume", lazy.spawn(
+    ([mod], "x", lazy.spawn(
         "pactl set-sink-volume @DEFAULT_SINK@ +5%"
     )),
-    ([], "XF86AudioMute", lazy.spawn(
+    ([mod], "a", lazy.spawn(
         "pactl set-sink-mute @DEFAULT_SINK@ toggle"
     )),
 ]]
@@ -131,18 +134,25 @@ for i, group in enumerate(groups):
         Key([mod, "shift"], actual_key, lazy.window.togroup(group.name))
     ])
 
+layout_conf = {
+    'border_focus': '#F07178',
+    'border_width': 1,
+    'margin': 4
+}
+
 layouts = [
-    layout.Columns(border_focus_stack=['#d75f5f', '#8f3d3d'], border_width=4),
+    layout.Columns(**layout_conf),
+    # layout.Columns(border_focus_stack=['#d75f5f', '#8f3d3d'], border_width=4),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
-    layout.MonadTall(),
+    # layout.MonadTall(),
     # layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
-    # layout.TreeTab(),
+    layout.TreeTab(**layout_conf),
     # layout.VerticalTile(),
     # layout.Zoomy(),
 ]
@@ -155,6 +165,80 @@ widget_defaults = dict(
 extension_defaults = widget_defaults.copy()
 
 screens = [
+    Screen(
+        top=bar.Bar(
+            [
+                widget.GroupBox(
+                    foreground=[ "#f1ffff", "#f1ffff"] ,
+                    background=["#0000003b", "#00000094"],
+                    font='UbuntuMono Nerd Font',
+                    fontsize=20,
+                    margin_y=3,
+                    margin_x=0,
+                    padding_y=8,
+                    padding_x=5,
+                    borderwidth=1,
+                    active=[ "#f1ffff", "#f1ffff"],
+                    inactive= [ "#f1ffff", "#f1ffff"],
+                    rounded=False,
+                    highlight_method='block',
+                    urgent_alert_method='block',
+                    urgent_border=["#4c566a", "#4c566a"],
+                    this_current_screen_border=["#a151d3", "#a151d3"],
+                    this_screen_border=["#F07178", "#F07178"],
+                    other_current_screen_border=["#0f101a", "#0f101a"],
+                    other_screen_border=["#0f101a", "#0f101a"],
+                    disable_drag=True ),
+                widget.Prompt(),
+                widget.WindowName(
+                    foreground=[ "#E06C75", "#E06C75"] ,
+                    background=["#0f101a", "#0f101a"],
+                    font='UbuntuMono Nerd Font Bold',
+                    fontsize=20,
+                ),
+                widget.Systray(),
+                widget.Sep(
+                    linewidth=0,
+                    padding=5,
+                    background=["#0f101a", "#0f101a"]
+                ),
+                widget.TextBox(
+                    foreground= ["#F07178","#F07178"],
+                    background= ["#0f101a", "#0f101a"],
+                    text="", # Icon: nf-oct-triangle_left
+                    fontsize=40,
+                    padding=-3
+                ),
+                widget.CurrentLayoutIcon(
+                    foreground=["#0f101a", "#0f101a"],
+                    background=["#F07178", "#F07178"],
+                    scale=0.65
+                ),
+                widget.CurrentLayout(
+                    foreground=["#0f101a", "#0f101a"],
+                    background=["#F07178", "#F07178"]
+                ),#separador de sections.
+                widget.TextBox(
+                    foreground= ["#a151d3","#a151d3"],
+                    background= ["#F07178","#F07178"],
+                    text="", # Icon: nf-oct-triangle_left
+                    fontsize=37,
+                    padding=-3
+                ),
+                widget.TextBox(
+                    padding=5,
+                    text=' ',
+                    background=["#a151d3", "#a151d3"],
+                    foreground=["#0f101a", "#0f101a"],
+                ),
+                widget.Clock(
+                    background=["#a151d3", "#a151d3"],
+                    foreground=["#0f101a", "#0f101a"],
+                    format='%Y-%m-%d %a %I:%M %p '),
+            ],
+            25, opacity=0.8
+        ),
+    ),
     Screen(
         top=bar.Bar(
             [
@@ -187,9 +271,47 @@ screens = [
                     fontsize=16,
                 ),
                 widget.Systray(),
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
+                widget.Sep(
+                    linewidth=0,
+                    padding=5,
+                    background=["#0f101a", "#0f101a"]
+                ),
+                widget.TextBox(
+                    foreground= ["#F07178","#F07178"],
+                    background= ["#0f101a", "#0f101a"],
+                    text="", # Icon: nf-oct-triangle_left
+                    fontsize=40,
+                    padding=-3
+                ),
+                widget.CurrentLayoutIcon(
+                    padding=5,
+                    foreground=["#0f101a", "#0f101a"],
+                    background=["#F07178", "#F07178"],
+                    scale=0.65
+                ),
+                widget.CurrentLayout(
+                    foreground=["#0f101a", "#0f101a"],
+                    background=["#F07178", "#F07178"]
+                ),
+                widget.TextBox(
+                    foreground= ["#a151d3","#a151d3"],
+                    background= ["#F07178","#F07178"],
+                    text="", # Icon: nf-oct-triangle_left
+                    fontsize=37,
+                    padding=-3
+                ),
+                widget.TextBox(
+                    padding=5,
+                    text=' ',
+                    background=["#a151d3", "#a151d3"],
+                    foreground=["#0f101a", "#0f101a"],
+                ),
+                widget.Clock(
+                    background=["#a151d3", "#a151d3"],
+                    foreground=["#0f101a", "#0f101a"],
+                    format='%Y-%m-%d %a %I:%M %p '),
             ],
-            24, opacity=0.2
+            25, opacity=0.8
         ),
     ),
 ]
@@ -197,9 +319,9 @@ screens = [
 # Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
-         start=lazy.window.get_position()),
+        start=lazy.window.get_position()),
     Drag([mod], "Button3", lazy.window.set_size_floating(),
-         start=lazy.window.get_size()),
+        start=lazy.window.get_size()),
     Click([mod], "Button2", lazy.window.bring_to_front())
 ]
 
@@ -217,7 +339,7 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='ssh-askpass'),  # ssh-askpass
     Match(title='branchdialog'),  # gitk
     Match(title='pinentry'),  # GPG key password entry
-])
+], border_focus= "#ffff")
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
