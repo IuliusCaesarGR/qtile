@@ -1,4 +1,3 @@
-
 # Qtile keybindings
 
 from libqtile.config import Key
@@ -45,45 +44,41 @@ keys = [Key(key[0], key[1], *key[2:]) for key in [
     ([mod], "r", lazy.spawncmd()),
 
     # ------------ App Configs ------------
+        # Menu
+        ([mod], "m", lazy.spawn("rofi -show drun")),
 
-    # Menu
-    ([mod], "m", lazy.spawn("rofi -show drun")),
+        # Window Nav
+        ([mod, "shift"], "m", lazy.spawn("rofi -show")),
 
-    # Window Nav
-    ([mod, "shift"], "m", lazy.spawn("rofi -show")),
+        # Browser
+        ([mod], "n", lazy.spawn("google-chrome-stable")),
 
-    # Browser
-    ([mod], "n", lazy.spawn("google-chrome-stable")),
+        # Code
+        ([mod], "v", lazy.spawn("code")),
 
-    # Code
-    ([mod], "v", lazy.spawn("code")),
+        # File Explorer
+        ([mod], "e", lazy.spawn("thunar")),
 
-    # File Explorer
-    ([mod], "e", lazy.spawn("thunar")),
+        # Terminal
+        ([mod], "Return", lazy.spawn("tilix")),
 
-    # Terminal
-    ([mod], "Return", lazy.spawn("tilix")),
+        # Redshift
+        ([mod], "r", lazy.spawn("redshift -O 2400")),
+        ([mod, "shift"], "r", lazy.spawn("redshift -x")),
 
-    # Redshift
-    ([mod], "r", lazy.spawn("redshift -O 2400")),
-    ([mod, "shift"], "r", lazy.spawn("redshift -x")),
-
-    # Screenshot
-    ([mod], "s", lazy.spawn("scrot")),
-    ([mod, "shift"], "s", lazy.spawn("scrot -s")),
+        # Screenshot
+        ([mod], "s", lazy.spawn("scrot")),
+        ([mod, "shift"], "s", lazy.spawn("scrot -s")),
 
     # ------------ Hardware Configs ------------
-
     # Volume
-    ([mod], "z", lazy.spawn(
-        "pactl set-sink-volume @DEFAULT_SINK@ -5%"
-    )),
-    ([mod], "x", lazy.spawn(
-        "pactl set-sink-volume @DEFAULT_SINK@ +5%"
-    )),
-    ([mod], "a", lazy.spawn(
-        "pactl set-sink-mute @DEFAULT_SINK@ toggle"
-    )),
-
-    # Brightness
+        ([mod], "z", lazy.spawn(
+            "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+        )),
+        ([mod], "x", lazy.spawn(
+            "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+        )),
+        ([mod], "a", lazy.spawn(
+            "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+        )),
 ]]

@@ -1,4 +1,3 @@
-
 # Theming for Qtile
 
 from os import path
